@@ -1,0 +1,9 @@
+build/
+install/
+log/
+
+node_modules/
+test_pkg/
+
+.project
+.vscode/

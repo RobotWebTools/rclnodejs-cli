@@ -1,0 +1,51 @@
+{
+  "name": "rclnodejs-cli",
+  "version": "0.0.1",
+  "description": "Commandline tools for the ROS2 rclnodejs client library",
+  "main": "index.js",
+  "bin": "./index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "postinstall": "colcon build --base-paths package-creation-tool",
+    "test": "mocha",
+    "lint": "eslint --max-warnings=0 --ext js index.js src message-generator-tool package-creation-tool test"
+  },
+  "keywords": [
+    "rclnodejs",
+    "ros2",
+    "ros",
+    "rcl",
+    "robotics",
+    "typescript"
+  ],
+  "author": "Wayne Parrott <http://wayneparrott.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobotWebTools/rclnodejs-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RobotWebTools/rclnodejs-cli/issues"
+  },
+  "homepage": "https://github.com/RobotWebTools/rclnodejs-cli#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^6.2.1",
+    "figlet": "^1.5.0",
+    "rclnodejs": "^0.18.1"
+  },
+  "devDependencies": {
+    "deep-equal": "^1.1.1",
+    "eslint": "^7.23.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "fs-extra": "^9.0.1",
+    "mocha": "^8.2.1",
+    "rimraf": "^3.0.2"
+  },
+  "engines": {
+    "node": ">= 8.12.0 <13.0.0"
+  }
+}

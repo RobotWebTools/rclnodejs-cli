@@ -1,0 +1,11 @@
+# ROS dirs
+install/
+build/
+log/
+
+*.log
+
+dist/
+node_modules/
+
+.vscode/settings.json

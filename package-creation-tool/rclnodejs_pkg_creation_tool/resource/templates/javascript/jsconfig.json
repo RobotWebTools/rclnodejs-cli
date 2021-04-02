@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules/*"],
+  "include": ["src/**/*"]
+}
