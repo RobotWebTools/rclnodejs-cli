@@ -1,4 +1,4 @@
-# rclnodejs-cli
+# rclnodejs-cli[![Build Status](https://travis-ci.org/RobotWebTools/rclnodejs-cli.svg?branch=develop)](https://travis-ci.org/RobotWebTools/rclnodejs-cli)
 Standalone commandline tools and `ros2 cli` extensions for use with the ROS2 [rclnodejs]() client library.
 
 ## Prerequisites
