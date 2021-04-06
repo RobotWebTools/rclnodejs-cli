@@ -1,0 +1,14 @@
+services:
+  - docker
+
+sudo: required
+
+branches:
+  only:
+  - develop
+
+script:
+  - 'if [ "$DOCKER_USERNAME" != "" ]; then sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD; fi'
+  - sudo docker pull ubuntu:focal
+  - sudo docker build -t rcldocker .
+  - sudo docker run -v $(pwd):/root/rclnodejs-cli --rm rcldocker bash -i -c 'cd /root/rclnodejs-cli && npm install --unsafe-perm && npm test'
