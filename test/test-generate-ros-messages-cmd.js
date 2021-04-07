@@ -17,7 +17,6 @@ describe('rclnodejs-cli generate-ros-messages command', function () {
 
     const cli = path.join(path.dirname(cwd), 'rclnodejs-cli');
     const cmd = `npx ${cli} generate-ros-messages`;
-    console.log('cmd:', cmd);
     childProcess.execSync(cmd);
 
     assert.ok(

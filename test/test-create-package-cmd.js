@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const rimraf = require('rimraf');
+const { tmpdir } = require('os');
 
 // HACK: on some windows systems the test_pkg folder was not
 // being fully deleted without multiple tries. So try up to n attempts.
@@ -102,24 +103,20 @@ describe('rclnodejs-cli package-creation-tool', function () {
   });
 
   it('rclnodejs-cli create-package javascript', (done) => {
-    const cwd = process.cwd();
-    const cli = path.join(cwd, '..', 'rclnodejs-cli');
-    childProcess.execSync(`npx ${cli} create-package ${pkgName}`);
+    const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
+    childProcess.execSync(`npx ${cli} create-package ${pkgName}`).toString();
 
-    // back up rclnodejs path
-    const pkgPath = path.join(cwd, pkgName);
+    const pkgPath = path.join(cli, pkgName);
     verifyPackage(pkgPath, false);
 
     done();
   });
 
   it('rclnodejs-cli create-package typescript', (done) => {
-    const cwd = process.cwd();
-    const cli = path.join(cwd, '..', 'rclnodejs-cli');
-    childProcess.execSync(`npx ${cli} create-package ${pkgName} --typescript`);
+    const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
+    childProcess.execSync(`npx ${cli} create-package ${pkgName} --typescript`).toString();
 
-    // back up rclnodejs path
-    const pkgPath = path.join(cwd, pkgName);
+    const pkgPath = path.join(cli, pkgName);
     verifyPackage(pkgPath, true);
 
     done();
