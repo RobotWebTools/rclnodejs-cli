@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const path = require('path');
 
 class PkgCreator {
@@ -72,13 +72,7 @@ class PkgCreator {
 
   // eslint-disable-next-line class-methods-use-this
   _runCmd(cmd) {
-    const child = exec(cmd);
-    child.stdout.on('data', (data) => {
-      console.log(data);
-    });
-    child.stderr.on('err', (data) => {
-      console.warn(data);
-    });
+    execSync(cmd, { stdio: 'inherit' });
   }
 }
 
