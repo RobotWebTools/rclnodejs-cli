@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const rimraf = require('rimraf');
-const { tmpdir } = require('os');
 
 // HACK: on some windows systems the test_pkg folder was not
 // being fully deleted without multiple tries. So try up to n attempts.
