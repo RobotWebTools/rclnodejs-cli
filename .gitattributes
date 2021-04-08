@@ -1,0 +1,73 @@
+# Based on https://github.com/alexkaratarakis/gitattributes/blob/master/Web.gitattributes
+
+# Auto detect
+##   Handle line endings automatically for files detected as
+##   text and leave all files detected as binary untouched.
+##   This will handle all files NOT defined below.
+*                 text=auto
+
+# Source code
+*.bash            text eol=lf
+*.bat             text eol=crlf
+*.cmd             text eol=crlf
+*.ini             text
+*.js              text
+*.json            text
+*.jsx             text
+*.less            text
+*.ls              text
+*.map             text -diff
+*.ps1             text eol=crlf
+*.py              text diff=python
+*.sh              text eol=lf
+*.ts              text
+*.tsx             text
+*.xml             text
+
+# Templates
+*.em              text
+
+# Docker
+Dockerfile        text
+
+# Documentation
+*.ipynb           text
+*.markdown        text diff=markdown
+*.md              text diff=markdown
+*.mdwn            text diff=markdown
+*.mdown           text diff=markdown
+*.mkd             text diff=markdown
+*.mkdn            text diff=markdown
+*.mdtxt           text
+*.mdtext          text
+*.txt             text
+AUTHORS           text
+CHANGELOG         text
+CHANGES           text
+CONTRIBUTING      text
+COPYING           text
+copyright         text
+*COPYRIGHT*       text
+license           text
+LICENSE           text
+readme            text
+*README*          text
+TODO              text
+
+# Configs
+.gitattributes    text
+package.json      text eol=lf
+package-lock.json text -diff
+pnpm-lock.yaml    text eol=lf -diff
+yarn.lock         text -diff
+*.toml            text
+*.yaml            text
+*.yml             text
+Makefile          text
+makefile          text
+
+# RC files (like .babelrc or .eslintrc)
+*.*rc             text
+
+# Ignore files (like .npmignore or .gitignore)
+*.*ignore         text
