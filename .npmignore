@@ -7,3 +7,5 @@ install/
 test/
 test_pkg/
 .vscode/
+.project
+.git*
