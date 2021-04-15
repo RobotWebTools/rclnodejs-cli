@@ -17,7 +17,7 @@ function rmdir(dir) {
   }
 }
 
-function verifyPackage(pkgPath, typescript) {
+function verifyPackage(pkgPath, typescript = false, noInit = false, rclnodejsVersion = undefined) {
   assert.ok(fs.existsSync(pkgPath));
   assert.ok(fs.existsSync(path.join(pkgPath, 'package.xml')));
   assert.ok(fs.existsSync(path.join(pkgPath, 'package.json')));
@@ -28,6 +28,21 @@ function verifyPackage(pkgPath, typescript) {
     assert.ok(fs.existsSync(path.join(pkgPath, 'tsconfig.json')));
   } else {
     assert.ok(fs.existsSync(path.join(pkgPath, 'src', 'index.js')));
+  }
+
+  const nodeModulesDirExists = fs.existsSync(path.join(pkgPath, 'node_modules'));
+  assert.ok(noInit ? !nodeModulesDirExists : nodeModulesDirExists);
+
+  if (!noInit && rclnodejsVersion) {
+    // load package.json and find the version number of the rclnodejs dependency
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const pkg = require(path.join(pkgPath, 'package.json'));
+    assert.ok(
+      pkg
+      && pkg.dependencies
+      && pkg.dependencies.rclnodejs
+      && pkg.dependencies.rclnodejs.endsWith(rclnodejsVersion)
+    );
   }
 }
 
@@ -101,6 +116,33 @@ describe('rclnodejs-cli package-creation-tool', function () {
     done();
   });
 
+  it('ros2cli-extension create javascript package --rclnodejs-version', (done) => {
+    const cwd = process.cwd();
+
+    let script = `run_ros2cli_pkg_create_nodejs${scriptExt()}`;
+    script = path.join(cwd, 'test', script);
+    const version = '0.18.1';
+    childProcess.execSync(`${script} ${pkgName} --rclnodejs-version ${version}`);
+
+    const pkgPath = path.join(cwd, pkgName);
+    verifyPackage(pkgPath, false, false, version);
+
+    done();
+  });
+
+  it('ros2cli-extension create javascript package --no-init', (done) => {
+    const cwd = process.cwd();
+
+    let script = `run_ros2cli_pkg_create_nodejs${scriptExt()}`;
+    script = path.join(cwd, 'test', script);
+    childProcess.execSync(`${script} ${pkgName} --no-init`);
+
+    const pkgPath = path.join(cwd, pkgName);
+    verifyPackage(pkgPath, false, true);
+
+    done();
+  });
+
   it('rclnodejs-cli create-package javascript', (done) => {
     const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
     childProcess.execSync(`npx ${cli} create-package ${pkgName}`).toString();
@@ -117,6 +159,27 @@ describe('rclnodejs-cli package-creation-tool', function () {
 
     const pkgPath = path.join(cli, pkgName);
     verifyPackage(pkgPath, true);
+
+    done();
+  });
+
+  it('rclnodejs-cli create-package javascript --no-init', (done) => {
+    const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
+    childProcess.execSync(`npx ${cli} create-package ${pkgName} --no-init`).toString();
+
+    const pkgPath = path.join(cli, pkgName);
+    verifyPackage(pkgPath, false, false);
+
+    done();
+  });
+
+  it('rclnodejs-cli create-package javascript --rclnodejs-version', (done) => {
+    const version = '0.18.1';
+    const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
+    childProcess.execSync(`npx ${cli} create-package ${pkgName} --rclnodejs-version ${version}`).toString();
+
+    const pkgPath = path.join(cli, pkgName);
+    verifyPackage(pkgPath, false, false, version);
 
     done();
   });
