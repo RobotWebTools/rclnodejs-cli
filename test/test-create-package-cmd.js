@@ -41,13 +41,38 @@ function verifyPackage(pkgPath, typescript = false, noInit = false, rclnodejsVer
       pkg
       && pkg.dependencies
       && pkg.dependencies.rclnodejs
-      && pkg.dependencies.rclnodejs.endsWith(rclnodejsVersion)
+      && pkg.dependencies.rclnodejs.endsWith(rclnodejsVersion),
     );
   }
 }
 
 function scriptExt() {
   return process.platform === 'win32' ? '.bat' : '.sh';
+}
+
+function rosDistroName() {
+  const cwd = process.cwd();
+
+  let script = `run_ros_version${scriptExt()}`;
+  script = path.join(cwd, 'test', script);
+  const stdoutBuf = childProcess.execSync(script, [], {
+    cwd,
+  });
+
+  const lines = stdoutBuf.toString().match(/[^\r\n]+/g);
+  if (lines && lines.length > 0) {
+    return lines[lines.length - 1];
+  }
+
+  return undefined;
+}
+
+function rclnodejsVersionForRosDistro() {
+  const distroName = rosDistroName();
+  if (distroName === 'foxy') return '0.18.1';
+  if (distroName === 'eloquent') return '0.18.1';
+  if (distroName === 'dashing') return '0.10.3';
+  return undefined;
 }
 
 describe('rclnodejs-cli package-creation-tool', function () {
@@ -117,11 +142,16 @@ describe('rclnodejs-cli package-creation-tool', function () {
   });
 
   it('ros2cli-extension create javascript package --rclnodejs-version', (done) => {
+    const version = rclnodejsVersionForRosDistro();
+    if (!version) {
+      console.warn('Unable to run test \'ros2cli-extension create javascript package --rclnodejs-version\' Could not recognized ROS distro name.');
+      done();
+    }
+
     const cwd = process.cwd();
 
     let script = `run_ros2cli_pkg_create_nodejs${scriptExt()}`;
     script = path.join(cwd, 'test', script);
-    const version = '0.18.1';
     childProcess.execSync(`${script} ${pkgName} --rclnodejs-version ${version}`);
 
     const pkgPath = path.join(cwd, pkgName);
@@ -174,7 +204,12 @@ describe('rclnodejs-cli package-creation-tool', function () {
   });
 
   it('rclnodejs-cli create-package javascript --rclnodejs-version', (done) => {
-    const version = '0.18.1';
+    const version = rclnodejsVersionForRosDistro();
+    if (!version) {
+      console.warn('Unable to run test \'rclnodejs-cli create-package javascript --rclnodejs-version\'. Could not recognized ROS distro name.');
+      done();
+    }
+
     const cli = path.join(__dirname, '..', '..', 'rclnodejs-cli');
     childProcess.execSync(`npx ${cli} create-package ${pkgName} --rclnodejs-version ${version}`).toString();
 
