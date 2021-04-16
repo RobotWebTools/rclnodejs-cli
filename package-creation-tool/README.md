@@ -20,6 +20,7 @@ Alternatively using npx:
   npx rclnodejs-cli create-package <package_name>
   npx rclnodejs-cli create-package <package_name> --typescript
 ```
+Be aware that when using `npx` to run `rclnodejs-cli`, this package includes a dependency on the rclnodejs package which has a lengthy install postinstall step. Thus if you frequently use `rclnodejs-cli` you may benefit from more responsiveness by installing this package globally.
 
 View the `create-package` options:
 ```
@@ -34,7 +35,7 @@ or
  | | | (__| | | | | (_) | (_| |  __/| \__ \
  |_|  \___|_|_| |_|\___/ \__,_|\___|/ |___/
                                   |__/
-Usage: rclnodejs-cli create-package <package_name> [options...]
+Usage: rclnodejs create-package <package_name> [options...]
 
 Create a ROS2 package for Nodejs development.
 
@@ -42,10 +43,11 @@ Options:
   --description <description>               The description given in the package.xml
   --destination-directory <directory_path>  Directory where to create the package directory
   --license <license>                       The license attached to this package
-  --maintainer-email <email>                email address of the maintainer of this package
-  --maintainer-name <name>                  name of the maintainer of this package
-  --typescript                              Configure as a TypeScript Node.js project
+  --maintainer-email <email>                Email address of the maintainer of this package
+  --maintainer-name <name>                  Name of the maintainer of this package
   --no-init                                 Do not run "npm init"
+  --rclnodejs-version <x.y.z>               The version of rclnodejs to use
+  --typescript                              Configure as a TypeScript Node.js project
   --dependencies <ros_packages...>          list of ROS dependencies
   -h, --help                                display help for command
 ```
