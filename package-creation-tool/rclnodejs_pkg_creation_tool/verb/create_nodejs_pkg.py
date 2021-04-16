@@ -42,10 +42,6 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
         parser.add_argument(
             'package_name',
             help='The package name')
-        # parser.add_argument(
-        #     '--rclnodejs-version',
-        #     default='latest',
-        #     help='The version of the rclnodejs client library to include')
         parser.add_argument(
             '--description',
             default='TODO: Package description',
@@ -65,19 +61,27 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
             help='list of dependencies')
         parser.add_argument(
             '--maintainer-email',
-            help='email address of the maintainer of this package'),
+            help='Email address of the maintainer of this package'),
         parser.add_argument(
             '--maintainer-name',
             default=getpass.getuser(),
-            help='name of the maintainer of this package'),
+            help='Name of the maintainer of this package'),
         parser.add_argument(
-            '--template_location',
+            '--no-init',
+            action='store_true',
+            default=False,
+            help='Do not run \'npm init\' on newly created package')
+        parser.add_argument(
+            '--template-location',
             help='The path to templates directory')
         parser.add_argument(
             '--typescript',
             action='store_true',
             default=False,
             help='Configure as a TypeScript Node.js project')
+        parser.add_argument(
+            '--rclnodejs-version',
+            help='Version of rclnodejs client library to use, x.y.z format')
 
     def main(self, *, args):
         # run 'ros2 pkg create <package_name>'
@@ -169,8 +173,9 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
                 os.path.join(template_dir_path, 'CMakeLists.install.em'),
                 os.path.join(cwd, CMAKELISTS_FILENAME))
 
-        # install all node.js dependencies in package.json
-        _run_npm_install()
+        if not args.no_init:
+            # install all node.js dependencies in package.json
+            _run_npm_install(args)
 
         print('Node.js setup complete.')
         return SUCCESS_RETURN
@@ -264,8 +269,8 @@ def _expand_template(template_file, data, output_file):
     with open(output_file, 'w') as h:
         h.write(content)
 
-def _run_npm_install():
-    npm = shutil.which('npm');
+def _run_npm_install(args):
+    npm = shutil.which('npm')
     if not npm:
         npm = shutil.which('yarn')
     if not npm:
@@ -279,5 +284,9 @@ def _run_npm_install():
     
     print(f'  Running \'{os.path.basename(npm)} install\' command.')
     subprocess.run([npm, 'install'])
-    return subprocess.run([npm, 'install', 'rclnodejs'])
+    rclnodejs_pkg = f"rclnodejs{'@' + args.rclnodejs_version if args.rclnodejs_version else ''}"
+    return subprocess.run([npm, 'install', rclnodejs_pkg])
+
+
+
 

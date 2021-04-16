@@ -8,14 +8,14 @@ class PkgCreator {
     createPkgCmd
       .usage('<package_name> [options...]')
       .description('Create a ROS2 package for Nodejs development.')
-      // .option('--rclnodejs-version <x.y.z>', 'The version of rclnodejs to use')
       .option('--description <description>', 'The description given in the package.xml')
       .option('--destination-directory <directory_path>', 'Directory where to create the package directory')
       .option('--license <license>', 'The license attached to this package')
-      .option('--maintainer-email <email>', 'email address of the maintainer of this package')
-      .option('--maintainer-name <name>', 'name of the maintainer of this package')
-      .option('--typescript', 'Configure as a TypeScript Node.js project')
+      .option('--maintainer-email <email>', 'Email address of the maintainer of this package')
+      .option('--maintainer-name <name>', 'Name of the maintainer of this package')
       .option('--no-init', 'Do not run "npm init"')
+      .option('--rclnodejs-version <x.y.z>', 'The version of rclnodejs to use')
+      .option('--typescript', 'Configure as a TypeScript Node.js project')
       .option('--dependencies <ros_packages...>', 'list of ROS dependencies')
       .action((packageName, options) => {
         this.createPackage(packageName, options);
@@ -35,9 +35,9 @@ class PkgCreator {
     let cmd = path.join(__dirname, '..', 'scripts', script);
     cmd += ` ${packageName}`;
 
-    // if (options.rclnodejsVersion) {
-    //   cmd += ` --rclnodejs-version "${options.rclnodejsVersion}"`;
-    // }
+    if (options.rclnodejsVersion) {
+      cmd += ` --rclnodejs-version "${options.rclnodejsVersion}"`;
+    }
 
     if (options.description) {
       cmd += ` --description "${options.description}"`;
@@ -57,6 +57,10 @@ class PkgCreator {
 
     if (options.maintainerName) {
       cmd += ` --maintainer-name "${options.maintainerName}"`;
+    }
+
+    if (options.noInit) {
+      cmd += ' --no-init';
     }
 
     if (options.typescript) {

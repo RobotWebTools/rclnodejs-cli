@@ -1,6 +1,6 @@
 {
   "name": "rclnodejs-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Commandline tools for the ROS2 rclnodejs client library",
   "main": "index.js",
   "bin": "./index.js",
@@ -8,7 +8,8 @@
     "test": "test"
   },
   "scripts": {
-    "postinstall": "colcon build --base-paths package-creation-tool && node scripts/set_script_permissions.js",
+    "postinstall": "npm run build-package-creation-tool && node scripts/set_script_permissions.js",
+    "build-package-creation-tool": "colcon build --base-paths package-creation-tool",
     "test": "mocha",
     "lint": "eslint --max-warnings=0 --ext js index.js src message-generator-tool package-creation-tool test"
   },
