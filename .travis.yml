@@ -11,4 +11,4 @@ script:
   - 'if [ "$DOCKER_USERNAME" != "" ]; then sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD; fi'
   - sudo docker pull ubuntu:focal
   - sudo docker build -t rcldocker .
-  - docker run -v $(pwd):/ros2/rclnodejs-cli --rm rcldocker bash -i -c ''\. $NVM_DIR/nvm.sh && nvm use v16 && cp -R /ros2/rclnodejs-cli ~/rclnodejs-cli && chown -R rclnodejs-user ~/rclnodejs-cli && cd ~/rclnodejs-cli && npm install --unsafe-perm && npm test'
+  - docker run -v $(pwd):/ros2/rclnodejs-cli --rm rcldocker bash -i -c '\. $NVM_DIR/nvm.sh && nvm use v16 && cp -R /ros2/rclnodejs-cli ~/rclnodejs && chown -R rclnodejs-user ~/rclnodejs-cli && cd ~/rclnodejs-cli && npm install --unsafe-perm && npm test'
