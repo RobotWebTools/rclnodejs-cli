@@ -7,3 +7,5 @@ test_pkg/
 
 .project
 .vscode/
+
+**/__pycache__

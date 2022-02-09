@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "generate-messages": "node_modules/.bin/generate-messages"
+    "generate-ros-messages": "node_modules/.bin/generate-ros-messages"
   },
   "dependencies": {
   },

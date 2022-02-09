@@ -4,7 +4,7 @@
   <name>rclnodejs_pkg_creation_tool</name>
   <version>0.0.1</version>
   <description>TODO: Package description</description>
-  <maintainer email="5588978+wayneparrott@users.noreply.github.com">ros2jsguy</maintainer>
+  <maintainer email="you@youremail.com">yourname</maintainer>
   <license>TODO: License declaration</license>
 
   <test_depend>ament_copyright</test_depend>

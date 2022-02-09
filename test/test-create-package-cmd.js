@@ -69,8 +69,9 @@ function rosDistroName() {
 
 function rclnodejsVersionForRosDistro() {
   const distroName = rosDistroName();
-  if (distroName === 'foxy') return '0.18.1';
-  if (distroName === 'eloquent') return '0.18.1';
+  if (distroName === 'galactic') return '0.21.0';
+  if (distroName === 'foxy') return '0.21.0';
+  if (distroName === 'eloquent') return '0.21.0';
   if (distroName === 'dashing') return '0.10.3';
   return undefined;
 }
