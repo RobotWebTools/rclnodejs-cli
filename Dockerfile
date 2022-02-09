@@ -46,5 +46,12 @@ WORKDIR /home/rclnodejs-user
 RUN echo "source $ROS2_WS/ros2-linux/local_setup.bash" >> $HOME/.bashrc
 
 # Install nvm, Node.js and node-gyp
+<<<<<<< Upstream, based on origin/develop
 RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 RUN  bash -c "\. .nvm/nvm.sh && nvm install lts/gallium"
+=======
+ENV NODE_VERSION lts/gallium
+RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+
+ENV PATH /bin/versions/node/$NODE_VERSION/bin:$PATH
+>>>>>>> 6d231d2 Updated docker node to v16
