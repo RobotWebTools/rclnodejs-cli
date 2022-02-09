@@ -5,7 +5,7 @@ Standalone commandline tools and `ros2 cli` extension for use with the ROS2 [rcl
 
 # Prerequisites #
 * ROS2 Foxy or greater including the [colcon](https://docs.ros.org/en/foxy/Tutorials/Colcon-Tutorial.html) build tools
-* Node.js version 10.23.1 - 12.x
+* Node.js version 10.23.1 - 17.x
 * npm or yarn package manager
 * **A shell environment that includes ROS2.** See [Configuring a ROS2 Environment](https://index.ros.org/doc/ros2/Tutorials/Configuring-ROS2-Environment/) for more info.
 

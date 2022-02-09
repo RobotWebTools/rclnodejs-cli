@@ -3,9 +3,9 @@
 <package format="3">
   <name>rclnodejs_pkg_creation_tool</name>
   <version>0.0.1</version>
-  <description>TODO: Package description</description>
-  <maintainer email="5588978+wayneparrott@users.noreply.github.com">ros2jsguy</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Creates hybrid ros2-nodejs package</description>
+  <maintainer email="5588978+wayneparrott@users.noreply.github.com">Wayne  Parrott</maintainer>
+  <license>APL2</license>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
