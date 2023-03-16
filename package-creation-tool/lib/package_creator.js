@@ -16,6 +16,7 @@ class PkgCreator {
       .option('--no-init', 'Do not run "npm init"')
       .option('--rclnodejs-version <x.y.z>', 'The version of rclnodejs to use')
       .option('--typescript', 'Configure as a TypeScript Node.js project')
+      .option('--no-ros-pkg', 'Do not create a ROS 2 package, e.g, package.xml')
       .option('--dependencies <ros_packages...>', 'list of ROS dependencies')
       .action((packageName, options) => {
         this.createPackage(packageName, options);
@@ -60,11 +61,15 @@ class PkgCreator {
     }
 
     if (options.noInit) {
-      cmd += ' --no-init';
+      cmd += ' --no-npm-init';
     }
 
     if (options.typescript) {
       cmd += ' --typescript';
+    }
+
+    if (!options.rosPkg) {
+      cmd += ' --no-ros-pkg';
     }
 
     if (options.dependencies) {

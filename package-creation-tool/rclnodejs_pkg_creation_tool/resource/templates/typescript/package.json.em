@@ -15,10 +15,10 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@@types/node": "ts4.5",
-    "nodemon": "^2.0.15",
-    "ts-node": "^10.5.0",
-    "typescript": "^4.5.0"
+    "@@types/node": "^18.15.0",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.0",
+    "typescript": "^4.9.0"
   }
 
 }

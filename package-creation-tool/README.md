@@ -1,13 +1,14 @@
 # `create-package` command
-The `rclnodejs-cli create-package` command creates a hybrid ROS2-Nodejs package that can coexist and participate with other ROS2 packages in a ROS2 workspace and be run using the ROS2 `launch` facility. A ROS2-Nodejs package consist of a ROS2 package, specifically an `ament-cmake` ROS2 package, overlaid with a Nodejs package. This command can also be run from the `ros2` cli as described in the [Using the command from the `ros2` commandline](#Using-the-command-from-the-ros2-commandline) section. 
+The `rclnodejs-cli create-package` command creates a hybrid ROS2-Nodejs package that can coexist and participate with other ROS 2 packages in a ROS 2 workspace and be run using the ROS 2 `launch` facility. A ROS2-Nodejs package consist of a ROS 2 package, specifically an `ament-cmake` ROS 2 package, overlaid with a Nodejs package. This command can also be run from the `ros2` commandline as described in the [Using the command from the `ros2` commandline](#Using-the-command-from-the-ros2-commandline) section. 
 
 ## Key Features
-* Creates a ROS2 ament_cmake packages and overlays it with a custom Nodejs package.
+* Creates a ROS 2 ament_cmake package and overlays it with a custom Nodejs package.
 * `--typescript` commandline option to configure the package for use with TypeScript.
-* Includes the ROS2 JavaScript client library, 
+* Includes the ROS 2 JavaScript client library, 
 [rclnodejs](https://github.com/RobotWebTools/rclnodejs) as a runtime dependency.
 * Creates and example JavaScript/TypeScript ROS2 publisher node and ROS2 launch-description.
 * Customized `CMakeList.txt` `install()` rules to install key runtime files to the package share/ folder
+* `--no-ros-pkg` commandline option to create omit the ROS 2 package creation and only create a Nodejs package.
 
 # Usage #
 Create a new ROS2-Nodejs package basic usage:
@@ -102,7 +103,7 @@ We can now use the `ros2 launch` command to run the `example.launch.py` launch-d
 
 Launch `example.launch.py` as shown below:
 ```
-  ros2 launch ros2_nodejs example.launch.py
+  ros2 launch <package-name> example.launch.py
 ```
 To view the messages being published to the `foo` topic, open a separate shell configured with your ROS2 environment and enter:
 ```
