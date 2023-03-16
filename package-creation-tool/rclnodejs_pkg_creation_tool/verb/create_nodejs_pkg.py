@@ -80,54 +80,72 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
             default=False,
             help='Configure as a TypeScript Node.js project')
         parser.add_argument(
+            '--no-ros-pkg',
+            action='store_true',
+            default=False,
+            help='Limit pkg creation to only the Nodejs package structure')
+        parser.add_argument(
             '--rclnodejs-version',
             help='Version of rclnodejs client library to use, x.y.z format')
 
     def main(self, *, args):
-        # run 'ros2 pkg create <package_name>'
-        ros2pkg_args = [
-            'ros2',
-            'pkg',
-            'create',
-            args.package_name,
-            '--description',
-            args.description,
-            '--license',
-            args.license,
-            '--destination-directory',
-            args.destination_directory,
-          ]
+        if not args.no_ros_pkg:
+          # run 'ros2 pkg create <package_name>'
+          ros2pkg_args = [
+              'ros2',
+              'pkg',
+              'create',
+              args.package_name,
+              '--description',
+              args.description,
+              '--license',
+              args.license,
+              '--destination-directory',
+              args.destination_directory,
+            ]
 
-        if args.maintainer_email:
-          ros2pkg_args.append('--maintainer-email')
-          ros2pkg_args.append(args.maintainer_email)
-        if args.dependencies:
-          ros2pkg_args.append('--dependencies')
-          ros2pkg_args.append(args.dependencies)
+          if args.maintainer_email:
+            ros2pkg_args.append('--maintainer-email')
+            ros2pkg_args.append(args.maintainer_email)
+          if args.dependencies:
+            ros2pkg_args.append('--dependencies')
+            ros2pkg_args.append(args.dependencies)
 
-        proc_result = subprocess.run(ros2pkg_args)
-        if proc_result.returncode != 0:
-          print('Unable to create package')
-          return ERROR_RETURN
+          proc_result = subprocess.run(ros2pkg_args)
+          if proc_result.returncode != 0:
+            print('Unable to create package')
+            return ERROR_RETURN
+
+          # verify cwd contains package.xml file
+          os.chdir(os.path.join(args.destination_directory, args.package_name))
+          cwd = os.getcwd()
+          if not package_exists_at(cwd):
+              print(f'  Current directory {cwd} does not contain a ROS {PACKAGE_MANIFEST_FILENAME} manifest file.')
+              return ERROR_RETURN
+
+          # parse package.xml
+          pkg = parse_package(cwd)
+
+        else:
+          pkgDir = os.path.join(args.destination_directory, args.package_name)
+
+          if os.path.exists(pkgDir):
+            print(f'  Package directory {cwd} already exists.')
+            return ERROR_RETURN
+
+          #manually create pkg folder
+          os.mkdir(pkgDir)
+          os.chdir(pkgDir)
+          cwd = os.getcwd()
 
         if args.typescript:
             print('Setting up Node.js and TypeScript.')
         else:
             print('Setting up Node.js.')
 
-        # verify cwd contains package.xml file
-        os.chdir(os.path.join(args.destination_directory, args.package_name))
-        cwd = os.getcwd()
-        if not package_exists_at(cwd):
-            print(f'  Current directory {cwd} does not contain a ROS {PACKAGE_MANIFEST_FILENAME} manifest file.')
-            return ERROR_RETURN
-
         template_dir_path = _get_template_dir_path(args)
         if _validate_template_dir(template_dir_path) == ERROR_RETURN:
             return ERROR_RETURN
-
-        # parse package.xml
-        pkg = parse_package(cwd)
 
         # copy all non-template files
         print('  Copy core Node.js files into package')
@@ -137,41 +155,50 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
         )
         shutil.copytree(template_dir_path, cwd, ignore=ignore_patterns, dirs_exist_ok=True)
         
+        if args.no_ros_pkg:
+          pkgjson_data = {
+              'name': args.package_name,
+              'version': "0.0.0",
+              'license': " ".join(args.license),
+              'description': args.description
+          }
+        else:
+          # create example launch file
+          print('  Creating example launch file, example.launch.py')
+          launch_data = {
+              'name': pkg.name
+          }
+          _expand_template(
+              os.path.join(template_dir_path, 'example.launch.em'),
+              launch_data,
+              os.path.join(cwd, 'launch', 'example.launch.py')
+          )
+
+          # update CMakeLists.txt with install() rules 
+          print('  Adding \'install()\' rules to CMakeLists.txt')
+          cmakelist_exists = os.path.exists(os.path.join(cwd, CMAKELISTS_FILENAME))
+          if not cmakelist_exists:
+              print(f'  Unable to setup cmake install rules. '
+                  'Current directory {cwd} does not contain a {CMAKELISTS_FILENAME} file.')
+          else:
+              _updateCMakeListsFile(
+                  os.path.join(template_dir_path, 'CMakeLists.install.em'),
+                  os.path.join(cwd, CMAKELISTS_FILENAME))
+          pkgjson_data = {
+              'name': pkg.name,
+              'version': pkg.version,
+              'license': " ".join(pkg.licenses),
+              'description': pkg.description
+          }
+
         # create package.json
         print('  Configuring package.json')
-        pkgjson_data = {
-            'name': pkg.name,
-            'version': pkg.version,
-            'license': " ".join(pkg.licenses),
-            'description': pkg.description
-        }
+
         _expand_template(
             os.path.join(template_dir_path, 'package.json.em'),
             pkgjson_data,
             os.path.join(cwd, 'package.json')
         )
-
-        # create example launch file
-        print('  Creating example launch file, example.launch.py')
-        launch_data = {
-            'name': pkg.name
-        }
-        _expand_template(
-            os.path.join(template_dir_path, 'example.launch.em'),
-            launch_data,
-            os.path.join(cwd, 'launch', 'example.launch.py')
-        )
-
-        # update CMakeLists.txt with install() rules 
-        print('  Adding \'install()\' rules to CMakeLists.txt')
-        cmakelist_exists = os.path.exists(os.path.join(cwd, CMAKELISTS_FILENAME))
-        if not cmakelist_exists:
-            print(f'  Unable to setup cmake install rules. '
-                 'Current directory {cwd} does not contain a {CMAKELISTS_FILENAME} file.')
-        else:
-            _updateCMakeListsFile(
-                os.path.join(template_dir_path, 'CMakeLists.install.em'),
-                os.path.join(cwd, CMAKELISTS_FILENAME))
 
         if not args.no_init:
             # install all node.js dependencies in package.json
@@ -283,7 +310,7 @@ def _run_npm_install(args):
         return ERROR_RETURN
     
     print(f'  Running \'{os.path.basename(npm)} install\' command.')
-    subprocess.run([npm, 'install'])
+    subprocess.run([npm, 'install', 'rclnodejs'])
     rclnodejs_pkg = f"rclnodejs{'@' + args.rclnodejs_version if args.rclnodejs_version else ''}"
     return subprocess.run([npm, 'install', rclnodejs_pkg])
 
