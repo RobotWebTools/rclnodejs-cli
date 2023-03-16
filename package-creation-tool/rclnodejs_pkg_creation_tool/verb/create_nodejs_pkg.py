@@ -67,7 +67,7 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
             default=getpass.getuser(),
             help='Name of the maintainer of this package'),
         parser.add_argument(
-            '--no-init',
+            '--no-npm-init',
             action='store_true',
             default=False,
             help='Do not run \'npm init\' on newly created package')
@@ -200,7 +200,7 @@ class CreateROS2NodeJsPkgVerb(VerbExtension):
             os.path.join(cwd, 'package.json')
         )
 
-        if not args.no_init:
+        if not args.no_npm_init:
             # install all node.js dependencies in package.json
             _run_npm_install(args)
 
@@ -310,7 +310,6 @@ def _run_npm_install(args):
         return ERROR_RETURN
     
     print(f'  Running \'{os.path.basename(npm)} install\' command.')
-    subprocess.run([npm, 'install', 'rclnodejs'])
     rclnodejs_pkg = f"rclnodejs{'@' + args.rclnodejs_version if args.rclnodejs_version else ''}"
     return subprocess.run([npm, 'install', rclnodejs_pkg])
 

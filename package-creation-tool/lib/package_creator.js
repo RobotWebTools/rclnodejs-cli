@@ -13,7 +13,7 @@ class PkgCreator {
       .option('--license <license>', 'The license attached to this package')
       .option('--maintainer-email <email>', 'Email address of the maintainer of this package')
       .option('--maintainer-name <name>', 'Name of the maintainer of this package')
-      .option('--no-init', 'Do not run "npm init"')
+      .option('--no-npm-init', 'Do not run "npm init"')
       .option('--rclnodejs-version <x.y.z>', 'The version of rclnodejs to use')
       .option('--typescript', 'Configure as a TypeScript Node.js project')
       .option('--no-ros-pkg', 'Do not create a ROS 2 package, e.g, package.xml')
@@ -60,7 +60,7 @@ class PkgCreator {
       cmd += ` --maintainer-name "${options.maintainerName}"`;
     }
 
-    if (options.noInit) {
+    if (!options.npmInit) {
       cmd += ' --no-npm-init';
     }
 
